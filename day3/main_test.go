@@ -15,7 +15,7 @@ func TestRun_example(t *testing.T) {
 		t.Error("Received error:", err)
 	}
 
-	want := "Sum: 157\n"
+	want := "Sum (part 1): 157\nSum (part 2): 70\n"
 	got := buf.String()
 	if got != want {
 		t.Error("Incorrect output:", got)
