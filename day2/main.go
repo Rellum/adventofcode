@@ -85,49 +85,49 @@ func parseShape(c uint8) (shape, error) {
 }
 
 func reply(them shape, outcome uint8) (shape, error) {
-    if outcome == 'Y' {
-        return them, nil // draw
-    }
+	if outcome == 'Y' {
+		return them, nil // draw
+	}
 
-    if outcome == 'X' { // lose
-        if them == Rock {
-            return Scissors, nil
-        } else if them == Paper {
-            return Rock, nil
-        } else { // them == Scissors
-            return Paper, nil
-        }
-    }
+	if outcome == 'X' { // lose
+		if them == Rock {
+			return Scissors, nil
+		} else if them == Paper {
+			return Rock, nil
+		} else { // them == Scissors
+			return Paper, nil
+		}
+	}
 
-    if outcome == 'Z' { // win
-        if them == Rock {
-            return Paper, nil
-        } else if them == Paper {
-            return Scissors, nil
-        } else { // them == Scissors
-            return Rock, nil
-        }
-    }
+	if outcome == 'Z' { // win
+		if them == Rock {
+			return Paper, nil
+		} else if them == Paper {
+			return Scissors, nil
+		} else { // them == Scissors
+			return Rock, nil
+		}
+	}
 
 	return 0, errors.New("unrecognised outcome")
 }
 
 func outcome(me, them shape) (score int) {
-    if me == them {
-        return 3
-    }
+	if me == them {
+		return 3
+	}
 
-    if me == Rock && them == Scissors {
-        return 6
-    }
+	if me == Rock && them == Scissors {
+		return 6
+	}
 
-    if me == Paper && them == Rock {
-        return 6
-    }
+	if me == Paper && them == Rock {
+		return 6
+	}
 
-    if me == Scissors && them == Paper {
-        return 6
-    }
+	if me == Scissors && them == Paper {
+		return 6
+	}
 
-    return 0
+	return 0
 }
