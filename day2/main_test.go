@@ -15,7 +15,7 @@ func TestRun_example(t *testing.T) {
 		t.Error("Received error:", err)
 	}
 
-	want := "Score: 15\n"
+	want := "Score (part 1): 15\nScore (part 2): 12\n"
 	got := buf.String()
 	if got != want {
 		t.Error("Incorrect output:", got)

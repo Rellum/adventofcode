@@ -30,7 +30,8 @@ func main() {
 }
 
 func run(args []string, stdin io.Reader, stdout io.Writer) error {
-	var score int
+	var part1Score int
+	var part2Score int
 	scanner := bufio.NewScanner(stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -43,28 +44,35 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 			return fmt.Errorf("failed to parse '%s'. second character is not whitespace", line)
 		}
 
-		them, err := parse(line[0])
+		them, err := parseShape(line[0])
 		if err != nil {
 			return fmt.Errorf("failed to parse their move in '%s': %w", line, err)
 		}
 
-		me, err := parse(line[2])
+		me, err := parseShape(line[2])
 		if err != nil {
 			return fmt.Errorf("failed to parse my move in '%s': %w", line, err)
 		}
 
-		score += int(me) + outcome(me, them)
+		calculated, err := reply(them, line[2])
+		if err != nil {
+			return fmt.Errorf("failed to calculate reply in '%s': %w", line, err)
+		}
+
+		part1Score += int(me) + outcome(me, them)
+		part2Score += int(calculated) + outcome(calculated, them)
 	}
 	if err := scanner.Err(); err != nil {
 		return fmt.Errorf("scanner error: %w", err)
 	}
 
-	fmt.Fprintln(stdout, "Score:", score)
+	fmt.Fprintln(stdout, "Score (part 1):", part1Score)
+	fmt.Fprintln(stdout, "Score (part 2):", part2Score)
 
 	return nil
 }
 
-func parse(c uint8) (shape, error) {
+func parseShape(c uint8) (shape, error) {
 	switch c {
 	case 'A', 'X':
 		return Rock, nil
@@ -74,6 +82,34 @@ func parse(c uint8) (shape, error) {
 		return Scissors, nil
 	}
 	return 0, errors.New("unrecognised shape symbol")
+}
+
+func reply(them shape, outcome uint8) (shape, error) {
+    if outcome == 'Y' {
+        return them, nil // draw
+    }
+
+    if outcome == 'X' { // lose
+        if them == Rock {
+            return Scissors, nil
+        } else if them == Paper {
+            return Rock, nil
+        } else { // them == Scissors
+            return Paper, nil
+        }
+    }
+
+    if outcome == 'Z' { // win
+        if them == Rock {
+            return Paper, nil
+        } else if them == Paper {
+            return Scissors, nil
+        } else { // them == Scissors
+            return Rock, nil
+        }
+    }
+
+	return 0, errors.New("unrecognised outcome")
 }
 
 func outcome(me, them shape) (score int) {

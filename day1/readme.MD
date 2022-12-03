@@ -91,7 +91,8 @@ keep my muscle memory.
 
 ```bash
 cat example-input.txt | go run main.go
-# output: 24000
+# output: Max: 24000
+#         Sum of top 3: 45000
 ```
 
 <!-- MARKDOWN LINKS & IMAGES -->
