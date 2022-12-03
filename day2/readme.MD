@@ -22,7 +22,7 @@ This is my attempt at a solution to the daily challenge. See the original challe
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- TASK DESCRIPTION -->
-## My solution to the Advent of Code Day 1 challenge
+## My solution to the Advent of Code Day 2 challenge
 
 --- Day 2: Rock Paper Scissors ---
 The Elves begin to set up camp on the beach. To decide whose tent gets to be closest to the snack storage, a giant Rock Paper Scissors tournament is already in progress.
