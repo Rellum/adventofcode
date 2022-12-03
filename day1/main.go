@@ -35,7 +35,7 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 
 		i, err := strconv.ParseInt(line, 10, 64)
 		if err != nil {
-			fmt.Errorf("failed to parse '%s': %w", line, err)
+			return fmt.Errorf("failed to parse '%s': %w", line, err)
 		}
 
 		calories[len(calories)-1] += i
