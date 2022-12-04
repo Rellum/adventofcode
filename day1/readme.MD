@@ -96,6 +96,6 @@ cat example-input.txt | go run main.go
 ```
 
 <!-- MARKDOWN LINKS & IMAGES -->
+[Challenge-url]: https://adventofcode.com/2022/day/1
 [Go-shield]: https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white
 [Go-url]: https://go.dev/
-[Challenge-url]: https://adventofcode.com/2022/day/1
