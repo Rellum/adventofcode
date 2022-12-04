@@ -28,6 +28,7 @@ func main() {
 
 func run(args []string, stdin io.Reader, stdout io.Writer) error {
 	var fullyContainedCount int
+	var overlappedCount int
 
 	scanner := bufio.NewScanner(stdin)
 	for scanner.Scan() {
@@ -52,12 +53,17 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 		if assignment1.contains(assignment2) || assignment2.contains(assignment1) {
 			fullyContainedCount++
 		}
+
+		if assignment1.overlaps(assignment2) {
+			overlappedCount++
+		}
 	}
 	if err := scanner.Err(); err != nil {
 		return fmt.Errorf("scanner error: %w", err)
 	}
 
-	fmt.Fprintln(stdout, "Count:", fullyContainedCount)
+	fmt.Fprintln(stdout, "Count fully contained (part 1):", fullyContainedCount)
+	fmt.Fprintln(stdout, "Count overlapping (part 2):", overlappedCount)
 
 	return nil
 }
@@ -84,6 +90,18 @@ func (a *assignment) contains(b *assignment) bool {
 	}
 
 	if a.to < b.to {
+		return false
+	}
+
+	return true
+}
+
+func (a *assignment) overlaps(b *assignment) bool {
+	if a.from < b.from && a.to < b.from {
+		return false
+	}
+
+	if b.from < a.from && b.to < a.from {
 		return false
 	}
 
