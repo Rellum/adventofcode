@@ -2,6 +2,8 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"encoding/gob"
 	"errors"
 	"fmt"
 	"io"
@@ -16,6 +18,12 @@ const (
 	exitFail = 1
 )
 
+var movePattern = regexp.MustCompile(`^move ([0-9]+) from ([0-9]+) to ([0-9]+)$`)
+
+type move struct {
+	from, to, count int
+}
+
 func main() {
 	if err := run(os.Args, os.Stdin, os.Stdout); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
@@ -23,10 +31,9 @@ func main() {
 	}
 }
 
-var movePattern = regexp.MustCompile(`^move ([0-9]+) from ([0-9]+) to ([0-9]+)$`)
-
 func run(args []string, stdin io.Reader, stdout io.Writer) error {
 	var stacks [][]rune
+	var moves []move
 	scanner := bufio.NewScanner(stdin)
 
 	// Parse starting position
@@ -58,39 +65,67 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 			return fmt.Errorf("move instruction could not be parsed: '%s'", line)
 		}
 
-		count, err := strconv.Atoi(matches[1])
+		var m move
+
+		m.count, err = strconv.Atoi(matches[1])
 		if err != nil {
 			return fmt.Errorf("error parsing '%s' as a number", matches[1])
 		}
 
-		from, err := strconv.Atoi(matches[2])
+		m.from, err = strconv.Atoi(matches[2])
 		if err != nil {
 			return fmt.Errorf("error parsing '%s' as a number", matches[2])
 		}
-		from-- // we use zero-indexed stack numbering
+		m.from-- // we use zero-indexed stack numbering
 
-		to, err := strconv.Atoi(matches[3])
+		m.to, err = strconv.Atoi(matches[3])
 		if err != nil {
 			return fmt.Errorf("error parsing '%s' as a number", matches[3])
 		}
-		to-- // we use zero-indexed stack numbering
+		m.to-- // we use zero-indexed stack numbering
 
-		for i := 0; i < count; i++ {
-			var popped rune
-			popped, stacks[from] = stacks[from][0], stacks[from][1:]
-			stacks[to] = append([]rune{popped}, stacks[to]...)
-		}
+		moves = append(moves, m)
 	}
 	if err := scanner.Err(); err != nil {
 		return fmt.Errorf("scanner error: %w", err)
 	}
 
-	var answer string
-	for i := range stacks {
-		answer += string(stacks[i][0])
+	// Part 1 calculation
+	part1stacks := cloneStacks(stacks)
+
+	for i := range moves {
+		m := moves[i]
+		for i := 0; i < m.count; i++ {
+			var popped rune
+			popped, part1stacks[m.from] = part1stacks[m.from][0], part1stacks[m.from][1:]
+			part1stacks[m.to] = append([]rune{popped}, part1stacks[m.to]...)
+		}
 	}
 
-	fmt.Fprintln(stdout, "Top crates:", answer)
+	fmt.Fprint(stdout, "Top crates (part 1): ")
+	for i := range stacks {
+		fmt.Fprint(stdout, string(part1stacks[i][0]))
+	}
+	fmt.Fprintln(stdout, "")
+
+	// Part 2 calculation
+	part2stacks := cloneStacks(stacks)
+
+	for i := range moves {
+		m := moves[i]
+		popped := make([]rune, m.count)
+		remainder := make([]rune, len(part2stacks[m.from])-m.count)
+		copy(popped, part2stacks[m.from][:m.count])
+		copy(remainder, part2stacks[m.from][m.count:])
+		part2stacks[m.from] = remainder
+		part2stacks[m.to] = append(popped, part2stacks[m.to]...)
+	}
+
+	fmt.Fprint(stdout, "Top crates (part 2): ")
+	for i := range stacks {
+		fmt.Fprint(stdout, string(part2stacks[i][0]))
+	}
+	fmt.Fprintln(stdout, "")
 
 	return nil
 }
@@ -135,4 +170,14 @@ func parseStacks(scanner *bufio.Scanner) ([][]rune, error) {
 	}
 
 	return nil, errors.New("did not completely parse stack starting state")
+}
+
+func cloneStacks(original [][]rune) [][]rune {
+	var result [][]rune
+	buff := new(bytes.Buffer)
+	enc := gob.NewEncoder(buff)
+	dec := gob.NewDecoder(buff)
+	enc.Encode(original)
+	dec.Decode(&result)
+	return result
 }

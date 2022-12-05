@@ -15,7 +15,7 @@ func TestRun_example(t *testing.T) {
 		t.Error("Received error:", err)
 	}
 
-	want := "Top crates: CMZ\n"
+	want := "Top crates (part 1): CMZ\nTop crates (part 2): MCD\n"
 	got := buf.String()
 	if got != want {
 		t.Error("Incorrect output:", got)
