@@ -26,23 +26,30 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 		return fmt.Errorf("reading input: %w", err)
 	}
 
-	answer, err := part1(string(input))
+	answer, err := search(string(input), 4)
 	if err != nil {
 		return fmt.Errorf("search error: %w", err)
 	}
 
-	fmt.Fprintln(stdout, "First marker after character", answer)
+	fmt.Fprintln(stdout, "First 4-character marker ends at character", answer)
+
+	answer, err = search(string(input), 14)
+	if err != nil {
+		return fmt.Errorf("search error: %w", err)
+	}
+
+	fmt.Fprintln(stdout, "First 14-character marker ends at character", answer)
 
 	return nil
 }
 
-func part1(s string) (int, error) {
-	for i := 3; i < len(s); i++ {
+func search(s string, markerLength int) (int, error) {
+	for i := markerLength - 1; i < len(s); i++ {
 		m := make(map[uint8]struct{})
-		for j := 0; j < 4; j++ {
+		for j := 0; j < markerLength; j++ {
 			m[s[i-j]] = struct{}{}
 		}
-		if len(m) == 4 {
+		if len(m) == markerLength {
 			return i + 1, nil
 		}
 	}
