@@ -93,6 +93,24 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 
 	fmt.Fprintln(stdout, "Part 1 sum:", part1Sum)
 
+	var maxUsed int64 = 70_000_000 - 30_000_000
+	required := dirs["/"] - maxUsed
+
+	part2MinSize := dirs["/"]
+	for _, i := range dirs {
+		if i < required {
+			continue
+		}
+
+		if i >= part2MinSize {
+			continue
+		}
+
+		part2MinSize = i
+	}
+
+	fmt.Fprintln(stdout, "Part 2 min size:", part2MinSize)
+
 	return nil
 }
 

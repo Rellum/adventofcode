@@ -163,6 +163,7 @@ keep my muscle memory.
 ```bash
 cat example-input.txt | go run main.go
 # output: Part 1 sum: 95437
+#         Part 2 min size: 24933642
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
