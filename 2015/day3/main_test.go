@@ -12,10 +12,11 @@ func Test(t *testing.T) {
 		input string
 		want  string
 	}{
-		{input: "", want: "1"},
-		{input: ">", want: "2"},
-		{input: "^>v<", want: "4"},
-		{input: "^v^v^v^v^v", want: "2"},
+		{input: "", want: "Year one house count: 1\nYear two house count: 1"},
+		{input: ">", want: "Year one house count: 2\nYear two house count: 2"},
+		{input: "^v", want: "Year one house count: 2\nYear two house count: 3"},
+		{input: "^>v<", want: "Year one house count: 4\nYear two house count: 3"},
+		{input: "^v^v^v^v^v", want: "Year one house count: 2\nYear two house count: 11"},
 	}
 	for i, test := range tests {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
@@ -26,9 +27,10 @@ func Test(t *testing.T) {
 				t.Error("run:", err)
 			}
 
-			got := strings.TrimRight(buf.String(), "\n")
-			if got != test.want {
-				t.Errorf("Incorrect output for '%s'. Expected:\n>>>%s<<<\nGot:\n>>>%s<<<", test.input, test.want, got)
+			want := test.want + "\n"
+			got := buf.String()
+			if got != want {
+				t.Errorf("Incorrect output for '%s'. Expected:\n>>>%s<<<\nGot:\n>>>%s<<<", test.input, want, got)
 			}
 		})
 	}
