@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 const (
@@ -21,7 +22,7 @@ func main() {
 }
 
 func run(args []string, stdin io.Reader, stdout io.Writer) error {
-	var niceCount int
+	var nice1Count, nice2Count int
 
 	scanner := bufio.NewScanner(stdin)
 	for scanner.Scan() {
@@ -31,20 +32,25 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 			return fmt.Errorf("unexpected empty line")
 		}
 
-		if isNice(line) {
-			niceCount++
+		if isNice1(line) {
+			nice1Count++
+		}
+
+		if isNice2(line) {
+			nice2Count++
 		}
 	}
 	if err := scanner.Err(); err != nil {
 		return fmt.Errorf("scanner error: %w", err)
 	}
 
-	fmt.Fprintf(stdout, "Nice count: %d\n", niceCount)
+	fmt.Fprintf(stdout, "Nice count (part 1): %d\n", nice1Count)
+	fmt.Fprintf(stdout, "Nice count (part 2): %d\n", nice2Count)
 
 	return nil
 }
 
-func isNice(s string) bool {
+func isNice1(s string) bool {
 	var vowels int
 	var double bool
 
@@ -71,4 +77,30 @@ func isNice(s string) bool {
 	}
 
 	return double && vowels >= 3
+}
+
+func isNice2(s string) bool {
+	pairs := map[string]struct{}{}
+	var doublePair, repeatedLetter bool
+
+	splits := strings.Split(s, "")
+	for i := range splits {
+		if i > 2 {
+			pairs[splits[i-3]+splits[i-2]] = struct{}{}
+		}
+
+		if i < 3 {
+			continue
+		}
+
+		if splits[i-2] == splits[i] {
+			repeatedLetter = true
+		}
+
+		if _, ok := pairs[splits[i-1]+splits[i]]; ok {
+			doublePair = true
+		}
+	}
+
+	return repeatedLetter && doublePair
 }
