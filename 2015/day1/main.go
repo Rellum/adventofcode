@@ -21,9 +21,11 @@ func main() {
 }
 
 func run(args []string, stdin io.Reader, stdout io.Writer) error {
+	var firstBasement int
 	var floor int
 
 	r := bufio.NewReader(stdin)
+	var i int
 	for {
 		c, _, err := r.ReadRune()
 		if err != nil {
@@ -33,6 +35,8 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 				return fmt.Errorf("read rune: %w", err)
 			}
 		}
+
+		i++
 
 		switch c {
 		case '(':
@@ -44,9 +48,16 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 		default:
 			return fmt.Errorf("unexpected character: '%s'", string(c))
 		}
+
+		if floor < 0 && firstBasement == 0 {
+			firstBasement = i
+		}
 	}
 
 	fmt.Fprintf(stdout, "Floor: %d\n", floor)
+	if firstBasement > 0 {
+		fmt.Fprintf(stdout, "Enters basement at: %d\n", firstBasement)
+	}
 
 	return nil
 }

@@ -17,11 +17,13 @@ func Test(t *testing.T) {
 		{input: "()()", want: "Floor: 0\n"},
 		{input: "(((", want: "Floor: 3\n"},
 		{input: "(()(()(", want: "Floor: 3\n"},
-		{input: "))(((((", want: "Floor: 3\n"},
-		{input: "())", want: "Floor: -1\n"},
-		{input: "))(", want: "Floor: -1\n"},
-		{input: ")))", want: "Floor: -3\n"},
-		{input: ")())())", want: "Floor: -3\n"},
+		{input: "))(((((", want: "Floor: 3\nEnters basement at: 1\n"},
+		{input: "())", want: "Floor: -1\nEnters basement at: 3\n"},
+		{input: "))(", want: "Floor: -1\nEnters basement at: 1\n"},
+		{input: ")))", want: "Floor: -3\nEnters basement at: 1\n"},
+		{input: ")())())", want: "Floor: -3\nEnters basement at: 1\n"},
+		{input: ")", want: "Floor: -1\nEnters basement at: 1\n"},
+		{input: "()())", want: "Floor: -1\nEnters basement at: 5\n"},
 	}
 	for i, test := range tests {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
