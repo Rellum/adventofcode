@@ -44,6 +44,10 @@ For example:
   make an MD5 hash starting with five zeroes is `1048970`; that is, the 
   MD5 hash of `pqrstuv1048970` looks like `000006136ef...`.
 
+**--- Part Two ---**
+
+Now find one that starts with **six zeroes**.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- BUILT WITH -->
@@ -61,7 +65,9 @@ keep my muscle memory.
 
 ```bash
 echo "abcdef" | go run main.go
-# output: >Answer: 609043
+# output: Answer (5 zero prefix): 609043
+#         Answer (6 zero prefix): 6742839
+
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

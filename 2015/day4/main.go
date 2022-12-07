@@ -31,17 +31,28 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 
 	input = bytes.TrimRight(input, "\n")
 
-	answer := 1
+	answer5, answer6 := 0, 0
+
+	i := 1
 	for {
-		digest := append(input, []byte(strconv.Itoa(answer))...)
+		digest := append(input, []byte(strconv.Itoa(i))...)
 		hash := fmt.Sprintf("%x", md5.Sum(digest))
-		if strings.HasPrefix(hash, "00000") {
+
+		if answer5 == 0 && strings.HasPrefix(hash, "00000") {
+			answer5 = i
+		}
+		if strings.HasPrefix(hash, "000000") {
+			answer6 = i
+		}
+		if answer5 > 0 && answer6 > 0 {
 			break
 		}
-		answer++
+
+		i++
 	}
 
-	fmt.Fprintf(stdout, "Answer: %d\n", answer)
+	fmt.Fprintf(stdout, "Answer (5 zero prefix): %d\n", answer5)
+	fmt.Fprintf(stdout, "Answer (6 zero prefix): %d\n", answer6)
 
 	return nil
 }
