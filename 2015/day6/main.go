@@ -26,10 +26,12 @@ var rgx = regexp.MustCompile(`^(turn on|turn off|toggle) (\d{1,3}),(\d{1,3}) thr
 
 func run(args []string, stdin io.Reader, stdout io.Writer) error {
 	grid := map[coord]bool{}
+	bright := map[coord]int{}
 
 	for x := 0; x < 1000; x++ {
 		for y := 0; y < 1000; y++ {
 			grid[coord{x, y}] = false
+			bright[coord{x, y}] = 0
 		}
 	}
 
@@ -62,13 +64,19 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 
 		for x := x1; x <= x2; x++ {
 			for y := y1; y <= y2; y++ {
+				c := coord{x, y}
 				switch matches[1] {
 				case "turn on":
-					grid[coord{x, y}] = true
+					grid[c] = true
+					bright[c]++
 				case "turn off":
-					grid[coord{x, y}] = false
+					grid[c] = false
+					if bright[c] > 0 {
+						bright[c]--
+					}
 				case "toggle":
-					grid[coord{x, y}] = !grid[coord{x, y}]
+					grid[c] = !grid[c]
+					bright[c] += 2
 				}
 			}
 		}
@@ -78,15 +86,19 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 	}
 
 	var count int
+	var totalBrightness int
 	for x := 0; x < 1000; x++ {
 		for y := 0; y < 1000; y++ {
-			if grid[coord{x, y}] {
+			c := coord{x, y}
+			if grid[c] {
 				count++
 			}
+			totalBrightness += bright[c]
 		}
 	}
 
-	fmt.Fprintf(stdout, "Answer: %d\n", count)
+	fmt.Fprintf(stdout, "Answer (part1): %d\n", count)
+	fmt.Fprintf(stdout, "Answer (part2): %d\n", totalBrightness)
 
 	return nil
 }

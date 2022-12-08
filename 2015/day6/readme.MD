@@ -42,6 +42,26 @@ For example:
 
 After following the instructions, **how many lights are lit**?
 
+**--- Part Two ---**
+
+You just finish implementing your winning light pattern when you realize you mistranslated Santa's message from Ancient Nordic Elvish.
+
+The light grid you bought actually has individual brightness controls; each light can have a brightness of zero or more.  The lights all start at zero.
+
+The phrase `turn on` actually means that you should increase the brightness of those lights by `1`.
+
+The phrase `turn off` actually means that you should decrease the brightness of those lights by `1`, to a minimum of zero.
+
+The phrase `toggle` actually means that you should increase the brightness of those lights by `2`.
+
+What is the **total brightness** of all lights combined after following Santa's instructions?
+
+For example:
+
+* `turn on 0,0 through 0,0` would increase the total brightness by `1`.
+* `toggle 0,0 through 999,999` would increase the total brightness by `2000000`.
+
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- BUILT WITH -->
@@ -59,10 +79,14 @@ keep my muscle memory.
 
 ```bash
 echo "turn on 0,0 through 999,999" | go run main.go    
-# output: Answer: 1000000
+# output: Answer (part1): 1000000
+#         Answer (part2): 1000000
 
-echo "turn on 499,499 through 500,500" | go run main.go
-# output: Answer: 4
+
+echo "toggle 499,499 through 500,500" | go run main.go
+# output: Answer (part1): 4
+#         Answer (part2): 8
+
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
