@@ -113,7 +113,62 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 		fmt.Fprintf(stdout, "\n")
 	}
 
-	fmt.Fprintf(stdout, "Answer: %v\n", count)
+	fmt.Fprintf(stdout, "Answer (part 1): %v\n", count)
+
+	var maxScenicScore int
+	for row := 0; row < len(heights); row++ {
+		for col := 0; col < len(heights[0]); col++ {
+			if score := scenicScore(heights, row, col); score > maxScenicScore {
+				maxScenicScore = score
+			}
+		}
+	}
+
+	fmt.Fprintf(stdout, "Answer (part 2): %v\n", maxScenicScore)
 
 	return nil
+}
+
+func scenicScore(heights [][]int, row, col int) int {
+	var count, score int
+
+	// look up
+	count = 0
+	for r := row - 1; r >= 0; r-- {
+		count++
+		if heights[r][col] >= heights[row][col] {
+			break
+		}
+	}
+	score = count
+
+	// look left
+	count = 0
+	for c := col - 1; c >= 0; c-- {
+		count++
+		if heights[row][c] >= heights[row][col] {
+			break
+		}
+	}
+	score *= count
+
+	// look right
+	count = 0
+	for c := col + 1; c < len(heights[row]); c++ {
+		count++
+		if heights[row][c] >= heights[row][col] {
+			break
+		}
+	}
+	score *= count
+
+	// look down
+	count = 0
+	for r := row + 1; r < len(heights); r++ {
+		count++
+		if heights[r][col] >= heights[row][col] {
+			break
+		}
+	}
+	return score * count
 }
