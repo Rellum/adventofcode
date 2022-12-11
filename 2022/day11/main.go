@@ -133,10 +133,8 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 }
 
 func matchPrefix(s, prefix string) (string, bool) {
-	if !strings.HasPrefix(s, prefix) {
-		return "", false
-	}
-	return strings.TrimPrefix(s, prefix), true
+	res := strings.TrimPrefix(s, prefix)
+	return res, len(s) != len(res)
 }
 
 type monkey struct {
@@ -164,8 +162,13 @@ func multiplyFunc(factor int) func(int) int {
 }
 
 func keepAway(monkeys []monkey, rounds int, relief bool) [2]int {
+	lcm := 1
+	for i := 0; i < len(monkeys); i++ {
+		lcm *= monkeys[i].testMod
+	}
+
 	for i := 0; i < rounds; i++ {
-		round(monkeys, relief)
+		round(monkeys, relief, lcm)
 	}
 
 	var first, second int
@@ -183,12 +186,7 @@ func keepAway(monkeys []monkey, rounds int, relief bool) [2]int {
 	return [...]int{first, second}
 }
 
-func round(monkeys []monkey, relief bool) {
-	lcm := 1
-	for i := 0; i < len(monkeys); i++ {
-		lcm *= monkeys[i].testMod
-	}
-
+func round(monkeys []monkey, relief bool, lcm int) {
 	for i := 0; i < len(monkeys); i++ {
 		m := &monkeys[i]
 		var item int
