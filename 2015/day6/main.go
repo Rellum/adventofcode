@@ -42,7 +42,7 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 
 		matches := rgx.FindStringSubmatch(line)
 		if matches == nil {
-			return fmt.Errorf("instruction '%s' could not be parsed")
+			return fmt.Errorf("instruction '%s' could not be parsed", line)
 		}
 
 		x1, _ := strconv.Atoi(matches[2])

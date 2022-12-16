@@ -41,7 +41,7 @@ func run(args []string, stdin io.Reader, stdout io.Writer) error {
 		for i := range points {
 			splits := strings.Split(points[i], ",")
 			if len(splits) != 2 {
-				return fmt.Errorf("unexpected empty line")
+				return fmt.Errorf("unexpected number of dimensions in '%s'", points[i])
 			}
 
 			x, err := strconv.Atoi(splits[0])
