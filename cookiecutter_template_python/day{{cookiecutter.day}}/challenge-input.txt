@@ -1,0 +1,1 @@
+curl -v --cookie "session=$ADVENT_OF_CODE_SESSION" https://adventofcode.com/{{cookiecutter.year}}/day/{{cookiecutter.day}}/input > challenge-input.txt
