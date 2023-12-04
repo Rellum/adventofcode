@@ -38,7 +38,7 @@ def challenge_input() -> List[str]:
 def example_input() -> List[str]:
     return file_input("example-input.txt")
 
-def parse(input: str) -> List[str]:
+def parse(input: str) -> List:
     res = []
     for line in input.splitlines():
         match = re.match(r'^Card +([0-9]+): ([0-9 ]+) \| ([0-9 ]+)$', line)
