@@ -12,9 +12,12 @@
 *.out
 
 .idea
+.pyc
+__pycache__
 
-cookiecutter_template
+cookiecutter_template*
 elf
+challenge-input.txt
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
