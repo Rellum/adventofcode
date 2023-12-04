@@ -52,8 +52,8 @@ def example2_input() -> List[str]:
     return file_input("example2-input.txt")
 
 
-def parse(i: str) -> List[str]:
-    return i.splitlines()
+def parse(input: str) -> List[str]:
+    return input.splitlines()
 
 
 def run():
